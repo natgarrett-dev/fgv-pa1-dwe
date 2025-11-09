@@ -17,44 +17,8 @@ app.get('/', (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="styles.css">
       <title>Meu Ambiente Frontend</title>
-      <style>
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          max-width: 800px;
-          margin: 50px auto;
-          padding: 20px;
-          background: #f5f5f5;
-        }
-        .container {
-          background: white;
-          padding: 40px;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-          color: #0066cc;
-          margin-bottom: 10px;
-        }
-        .badge {
-          display: inline-block;
-          padding: 5px 10px;
-          background: #28a745;
-          color: white;
-          border-radius: 4px;
-          font-size: 14px;
-          margin-bottom: 20px;
-        }
-        .info {
-          background: #e7f3ff;
-          padding: 15px;
-          border-left: 4px solid #0066cc;
-          margin: 20px 0;
-        }
-        ul {
-          line-height: 1.8;
-        }
-      </style>
     </head>
     <body>
       <div class="container">
@@ -115,8 +79,8 @@ app.use((req, res) => {
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`\n🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📍 Acesse: http://localhost:${PORT}`);
-  console.log(`\n✨ Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log('⏰ Iniciado em:', new Date().toLocaleString('pt-BR'));
+  console.log(`Acesse: http://localhost:${PORT}`);
+  console.log(`\n Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log('Iniciado em:', new Date().toLocaleString('pt-BR'));
   console.log('\n💡 Pressione Ctrl+C para parar o servidor\n');
 });
