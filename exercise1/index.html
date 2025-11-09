@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Exercício 01 - Arquitetura Cliente-Servidor</title>
+</head>
+<body>
+    <header>
+        <h1>Arquitetura Cliente-Servidor</h1>
+        <p>Análise de fluxo de comunicação: portal.fgv.br</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Diagrama de Fluxo de Comunicação</h2>
+            <div class="diagram">
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-box">Cliente (Navegador)<br>Solicita portal.fgv.br</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-box">Cache do Navegador<br>Verifica recursos salvos</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-box">Servidor DNS<br>Resolve domínio → IP</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-box">Roteadores<br>Encaminham pacotes</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-box">Servidor Web (Backend)<br>Processa requisição</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-box">Resposta (HTML/CSS/JS)<br>Frontend renderizado</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Processo de Resolução DNS</h2>
+            <article>
+                <h3>O que é DNS?</h3>
+                <p>
+                    O Domain Name System (DNS) é como uma "agenda telefônica" da Internet, convertendo nomes de domínio legíveis por humanos em endereços IP que os computadores usam para se comunicar.
+                </p>
+
+                <h3>Etapas da Resolução DNS para portal.fgv.br</h3>
+                <p>
+                    <strong>1. Cache Local:</strong> O navegador primeiro verifica se o endereço IP de portal.fgv.br está armazenado em seu cache local. Se estiver e não expirou, usa esse endereço imediatamente.
+                </p>
+                <p>
+                    <strong>2. Resolver DNS Recursivo:</strong> Se não encontrado localmente, a consulta é enviada ao servidor DNS do provedor de Internet (ISP), que atua como intermediário.
+                </p>
+                <p>
+                    <strong>3. Servidores Root:</strong> O resolver consulta um dos 13 servidores root DNS globais, que direcionam para os servidores responsáveis pelo domínio ".br".
+                </p>
+                <p>
+                    <strong>4. Servidor TLD:</strong> O servidor Top-Level Domain (.br) indica qual servidor autoritativo gerencia o domínio "fgv.br".
+                </p>
+                <p>
+                    <strong>5. Servidor Autoritativo:</strong> Finalmente, o servidor autoritativo da FGV retorna o endereço IP correspondente (ex: 200.152.38.155).
+                </p>
+                <p>
+                    <strong>6. Resposta ao Cliente:</strong> O endereço IP é retornado ao navegador, que então estabelece conexão TCP com o servidor web.
+                </p>
+
+                <div class="highlight">
+                    <strong>Tempo médio:</strong> Todo esse processo ocorre em milissegundos (geralmente 20-120ms) e é otimizado por múltiplos níveis de cache.
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <h2>Cache do Navegador</h2>
+            <article>
+                <h3>Função e Importância</h3>
+                <p>
+                    O cache do navegador é um sistema de armazenamento temporário que mantém cópias locais de recursos da web (HTML, CSS, JavaScript, imagens) para acelerar carregamentos futuros e reduzir consumo de banda.
+                </p>
+
+                <h3>Tipos de Cache</h3>
+                <p>
+                    <strong>Memory Cache:</strong> Armazena recursos na RAM durante a sessão do navegador. Extremamente rápido, mas temporário - perdido ao fechar o navegador.
+                </p>
+                <p>
+                    <strong>Disk Cache:</strong> Salva recursos no disco rígido, persistindo entre sessões. Mais lento que memory cache, mas preserva dados por mais tempo.
+                </p>
+                <p>
+                    <strong>Service Worker Cache:</strong> Permite controle programático do cache via JavaScript, possibilitando funcionamento offline.
+                </p>
+
+                <h3>Estratégia de Validação</h3>
+                <p>
+                    Quando o navegador acessa portal.fgv.br novamente, ele verifica os cabeçalhos HTTP como <code>ETag</code> e <code>Last-Modified</code> para determinar se os recursos em cache ainda são válidos. Se sim, usa a versão local (resposta 304 Not Modified). Se não, baixa a versão atualizada.
+                </p>
+
+                <div class="highlight">
+                    <strong>Benefício:</strong> Um site bem otimizado pode ter 80-90% dos recursos servidos do cache, reduzindo o tempo de carregamento de segundos para milissegundos.
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <h2>Papel dos Roteadores</h2>
+            <article>
+                <h3>Função na Rede</h3>
+                <p>
+                    Roteadores são dispositivos de rede responsáveis por encaminhar pacotes de dados entre diferentes redes, determinando o caminho mais eficiente para que informações viajem da origem ao destino.
+                </p>
+
+                <h3>Processo de Roteamento</h3>
+                <p>
+                    <strong>1. Recepção do Pacote:</strong> O roteador recebe um pacote de dados contendo o endereço IP de destino (servidor da FGV) e analisa seu cabeçalho.
+                </p>
+                <p>
+                    <strong>2. Consulta da Tabela de Roteamento:</strong> Utiliza uma tabela interna que mapeia destinos para interfaces de rede e próximos saltos (next hops).
+                </p>
+                <p>
+                    <strong>3. Determinação do Caminho:</strong> Escolhe a melhor rota baseando-se em métricas como latência, largura de banda e número de saltos.
+                </p>
+                <p>
+                    <strong>4. Encaminhamento:</strong> Envia o pacote para o próximo roteador no caminho ou diretamente ao destino se estiver na mesma rede local.
+                </p>
+                <p>
+                    <strong>5. Múltiplos Saltos:</strong> Um pacote pode atravessar 10-20 roteadores diferentes em sua jornada pela Internet, cada um tomando decisões de roteamento independentes.
+                </p>
+
+                <h3>Protocolos Envolvidos</h3>
+                <p>
+                    <strong>TCP/IP:</strong> Protocolo base que divide dados em pacotes, garantindo entrega confiável e ordenada.
+                </p>
+                <p>
+                    <strong>BGP (Border Gateway Protocol):</strong> Protocolo usado por roteadores de diferentes sistemas autônomos (ISPs, grandes organizações) para trocar informações de roteamento.
+                </p>
+
+                <div class="highlight">
+                    <strong>Velocidade:</strong> Roteadores modernos processam milhões de pacotes por segundo, com latências de microssegundos por salto.
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <h2>Frontend vs Backend</h2>
+            <article>
+                <h3>Contexto no Fluxo Cliente-Servidor</h3>
+                <p>
+                    No acesso ao portal.fgv.br, frontend e backend desempenham papéis complementares mas distintos na arquitetura cliente-servidor.
+                </p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Frontend</th>
+                            <th>Backend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Localização</strong></td>
+                            <td>Executa no navegador do cliente</td>
+                            <td>Executa no servidor da FGV</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tecnologias</strong></td>
+                            <td>HTML, CSS, JavaScript, React, Vue</td>
+                            <td>Python, Java, Node.js, PHP, bancos de dados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Responsabilidade</strong></td>
+                            <td>Interface visual, interação com usuário, experiência (UX)</td>
+                            <td>Lógica de negócio, processamento de dados, segurança</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Acesso a Dados</strong></td>
+                            <td>Apenas dados públicos recebidos do servidor</td>
+                            <td>Acesso completo a bancos de dados e sistemas internos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Visibilidade</strong></td>
+                            <td>Código visível e inspecionável pelo usuário</td>
+                            <td>Código oculto e protegido no servidor</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Processamento</strong></td>
+                            <td>Usa recursos do dispositivo do usuário</td>
+                            <td>Usa recursos dos servidores da instituição</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Fluxo de Interação no Portal FGV</h3>
+                <p>
+                    <strong>1. Requisição Inicial:</strong> O navegador solicita a página inicial. O backend processa essa requisição, consulta bancos de dados se necessário, e gera/envia HTML, CSS e JavaScript (frontend).
+                </p>
+                <p>
+                    <strong>2. Renderização Frontend:</strong> O navegador interpreta o HTML (estrutura), aplica CSS (estilo) e executa JavaScript (interatividade), criando a interface que o usuário vê.
+                </p>
+                <p>
+                    <strong>3. Interações Dinâmicas:</strong> Quando o usuário clica em "Notícias" ou faz login, JavaScript envia requisições assíncronas (AJAX/Fetch) ao backend via API.
+                </p>
+                <p>
+                    <strong>4. Processamento Backend:</strong> O servidor valida credenciais, consulta banco de dados de notícias, aplica regras de negócio e retorna dados (geralmente em JSON).
+                </p>
+                <p>
+                    <strong>5. Atualização Frontend:</strong> JavaScript recebe os dados e atualiza dinamicamente a interface sem recarregar a página completa.
+                </p>
+
+                <div class="highlight">
+                    <strong>Segurança:</strong> Nunca confie no frontend! Toda validação e lógica de segurança deve ser implementada no backend, pois o código frontend pode ser manipulado pelo usuário.
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <h2>Resumo do Fluxo Completo</h2>
+            <article>
+                <p>
+                    Ao digitar "portal.fgv.br" e pressionar Enter, uma complexa sequência de eventos ocorre em frações de segundo:
+                </p>
+                <p>
+                    <strong>1.</strong> O navegador verifica seu <strong>cache</strong> para recursos existentes do site.
+                </p>
+                <p>
+                    <strong>2.</strong> O sistema de <strong>DNS</strong> resolve o domínio para um endereço IP através de múltiplos servidores.
+                </p>
+                <p>
+                    <strong>3.</strong> <strong>Roteadores</strong> em múltiplas redes encaminham os pacotes TCP/IP através da Internet.
+                </p>
+                <p>
+                    <strong>4.</strong> O <strong>backend</strong> da FGV processa a requisição HTTP, executa lógica de negócio e prepara a resposta.
+                </p>
+                <p>
+                    <strong>5.</strong> O servidor envia HTML, CSS e JavaScript de volta através dos mesmos roteadores.
+                </p>
+                <p>
+                    <strong>6.</strong> O <strong>frontend</strong> é renderizado no navegador, criando a interface visual e interativa.
+                </p>
+                <p>
+                    <strong>7.</strong> Recursos são armazenados no <strong>cache</strong> para visitas futuras mais rápidas.
+                </p>
+                <p>
+                    <strong>8.</strong> Interações subsequentes usam JavaScript para comunicação assíncrona com o backend via APIs.
+                </p>
+                <p>
+                    Essa arquitetura cliente-servidor permite escalabilidade, manutenibilidade e separação de responsabilidades, fundamentais para aplicações web modernas.
+                </p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
